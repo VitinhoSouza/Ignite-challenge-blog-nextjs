@@ -1,1 +1,80 @@
-// TODO
+.containerHome{
+
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: calc(100vh - 5rem);
+
+    display: flex;
+    align-items: center;
+
+    .contentHome{
+        max-width: 720px;
+        height: 100%;
+        margin: 5rem auto 0;
+
+        img{
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .containerPosts{
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+
+            a{
+                display: block;
+                margin-right: auto;
+
+                & + a {
+                    margin-top: 3rem;
+                    border-top: 1px solid var(--gray-700);
+                }
+
+                strong{
+                    font-weight: 700;
+                    font-size: 1.75rem;
+                }
+
+                p{
+                    font-size: 1.125rem;
+                    margin-top: 0.5rem;
+                }
+
+                .timeAndAuthor{
+                    display: flex;
+                    margin-top: 1.5rem;
+
+                    time,span{
+                        width: 10rem;
+
+                        svg{
+                            height: 1.3rem !important;
+                            width: 1.3rem !important;
+                            margin-right: 0.5rem;
+                        }
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: initial;
+                    }
+                }
+            }
+        }
+
+        .loadMore{
+            margin-top: 2rem;
+
+            background: none;
+            border: none;
+            color: var(--rose);
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+    }
+}
