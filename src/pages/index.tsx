@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GetStaticProps } from 'next';
+import Link from "next/link";
 
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -55,25 +56,27 @@ export default function Home({
 
         <div className={styles.containerPosts}>
           {posts.map(post => (
-            <a href={`/post/${post.uid}`} key={post.uid}>
-              <strong>{post.data.title}</strong>
-              <p>{post.data.subtitle}</p>
-              <div className={styles.timeAndAuthor}>
-                <time>
-                  <BsCalendarDate />{' '}
-                  {format(
-                    new Date(post.first_publication_date),
-                    'dd MMM yyyy',
-                    {
-                      locale: ptBR,
-                    }
-                  )}
-                </time>
-                <span>
-                  <IoMdPerson /> {post.data.author}
-                </span>
-              </div>
-            </a>
+            <Link href={`post/${post.uid}`} key={post.uid}>
+              <a>
+                <strong>{post.data.title}</strong>
+                <p>{post.data.subtitle}</p>
+                <div className={commonStyles.timeAndAuthor}>
+                  <time>
+                    <BsCalendarDate />{' '}
+                    {format(
+                      new Date(post.first_publication_date),
+                      'dd MMM yyyy',
+                      {
+                        locale: ptBR,
+                      }
+                    )}
+                  </time>
+                  <span>
+                    <IoMdPerson /> {post.data.author}
+                  </span>
+                </div>
+              </a>
+            </Link>
           ))}
         </div>
 
@@ -83,7 +86,7 @@ export default function Home({
             className={styles.loadMore}
             onClick={getNextPagePosts}
           >
-            Carregar mais...
+            Carregar mais posts
           </button>
         )}
       </div>

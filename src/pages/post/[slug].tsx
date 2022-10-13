@@ -5,6 +5,7 @@ import { BiTimeFive } from 'react-icons/bi';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { RichText } from 'prismic-dom';
+import { useRouter } from 'next/router';
 
 import Header from '../../components/Header';
 
@@ -36,11 +37,24 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
-  const isLoading: boolean = post === undefined;
+
+  const router = useRouter();
+
+  function getTimeToRead(){
+    let wordsCount = 0;
+    post.data.content.map(content => {
+      wordsCount += content.heading.split(/[,.\s]/).length;
+      content.body.map(body => {
+        wordsCount += body.text.split(/[,.\s]/).length;
+      })
+    })
+    return Math.ceil((wordsCount/200));
+  }
+
   return (
     <div className={styles.containerPagePost}>
       <Header />
-      {isLoading ? (
+      {router.isFallback ? (
         <div className={styles.containerPost}>Carregando...</div>
       ) : (
         <div className={styles.containerPost}>
@@ -48,7 +62,7 @@ export default function Post({ post }: PostProps) {
 
           <div className={styles.mainInfo}>
             <strong>{post.data.title}</strong>
-            <div className={styles.timeAndAuthor}>
+            <div className={commonStyles.timeAndAuthor}>
               <time>
                 <BsCalendarDate />{' '}
                 {format(new Date(post.first_publication_date), 'dd MMM yyyy', {
@@ -60,13 +74,13 @@ export default function Post({ post }: PostProps) {
               </span>
               <time>
                 <BiTimeFive />
-                {post.timeToRead} min
+                {getTimeToRead()} min
               </time>
             </div>
           </div>
 
           {post.data.content.map(content => (
-            <div className={styles.content}>
+            <div className={styles.content} key={content.heading}>
               <strong className={styles.heading}>{content.heading}</strong>
               <div
                 className={styles.body}
@@ -84,14 +98,16 @@ export default function Post({ post }: PostProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient({});
-  // const posts = await prismic.getByType('blog');
+  const posts = await prismic.getByType('blog');
 
   return {
-    paths: [
-      {
-        params: { slug: 'liga-quixadaense-de-futsal-encerrou-a-copa-crianca' },
-      }, //If I want to generate some post statically in the build
-    ],
+    paths:
+      posts.results.map(result => (
+        {params:{
+          slug: result.uid
+        }}
+      ))
+    , //If I want to generate some post statically in the build
     fallback: true,
   };
 };
@@ -101,20 +117,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient({});
   const response = await prismic.getByUID('blog', String(slug));
 
-  let wordsCount = 0;
-  response.data.content.map(content => {
-    wordsCount += content.heading.split(" ").length;
-    content.body.map(body => {
-      wordsCount += body.text.split(" ").length;
-    })
-  })
-
   return {
     props: {
-      post: {
-        ...response,
-        timeToRead: (wordsCount/200).toFixed()
-      }
+      post: response
     },
   };
 };

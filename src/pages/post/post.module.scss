@@ -8,7 +8,6 @@
     .containerPost{
         max-width: 45rem;
         margin-bottom: 2rem;
-        // text-align: center;
         
         display: flex;
         flex-direction: column;
@@ -25,26 +24,6 @@
                 font-weight: 700;
                 font-size: 3rem;
             }   
-
-            .timeAndAuthor{
-                display: flex;
-                margin-top: 1.5rem;
-
-                    time,span{
-                        width: 10rem;
-
-                        svg{
-                            height: 1.3rem !important;
-                            width: 1.3rem !important;
-                            margin-right: 0.5rem;
-                        }
-
-                        display: flex;
-                        align-items: center;
-                        justify-content: initial;
-                    }
-
-            }
         }
 
         .content{
